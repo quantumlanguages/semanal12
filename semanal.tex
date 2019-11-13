@@ -7,11 +7,23 @@
 % font
 \renewcommand{\familydefault}{\sfdefault}
 
+% extra math env
+\usepackage{amsmath}
+
+% extra math symbs
+\usepackage{amssymb}
+
 % code
 \usepackage{minted}
 
 % macros
 \newcommand{\tx}[1]{\texttt{#1}}
+\newcommand{\es}{$\square$}
+\newcommand{\pop}[2]{ \tx{#1} \succ \tx{#2}}
+\newcommand{\push}[2]{ \tx{#1} \prec \tx{#2}}
+\newcommand{\kr}{\rightarrow_{\mathcal{K}} \quad}
+\newcommand{\br}{\rightarrow_{\beta} \quad}
+\newcommand{\krs}{\rightarrow_{\mathcal{K}}^{\star} \quad}
 
 % header
 \title{
@@ -36,8 +48,26 @@
             \tx{(letcc k in 10 * (continue k 3)) + 2}
         \]
 
+        En en caso donde las expresiones antes de evaluar ya son valores y no
+        forman parte de una expresión \tx{continue}, se saltará directamente a
+        la siguiente evaluación.
+
+        \begin{align*}
+            & \pop{\es}{(letcc[Nat](k.10 * continue(k, 3))) + 2} \\
+            \kr & \pop{sum(\_ + 2)}{letcc[Nat](k.10 * continue(k, 3))} \\
+            \kr & \pop{sum(\_ + 2)}{(10 * continue(k, 3))[k := cont(sum(\_ + 2))]} \\
+            \br & \pop{sum(\_ + 2)}{10 * continue(cont(sum(\_ + 2)), 3)} \\
+            \krs & \pop{mul(10, \_),sum(\_ + 2)}{continue(cont(sum(\_ + 2)), 3)} \\
+            \kr & \pop{continue(\_, 3), mul(10, \_),sum(\_ + 2)}{cont(sum(\_ + 2))} \\
+            \kr & \push{continue(\_, 3), mul(10, \_),sum(\_ + 2)}{cont(sum(\_ + 2))} \\
+            \kr & \pop{continue(cont(sum(\_ + 2)), \_), mul(10, \_),sum(\_ + 2)}{3} \\
+            \kr & \push{continue(cont(sum(\_ + 2)), \_), mul(10, \_),sum(\_ + 2)}{3} \\
+            \kr & \push{sum(\_ + 2)}{3} \\
+            \krs & \push{\es}{5}
+        \end{align*}
+
         \item Transforme la siguiente función a CPS
-        
+
         \begin{minted}{haskell}
             -- función filter
             filter _ [] = []
@@ -47,6 +77,8 @@
               where xs' = filter f xs
         \end{minted}
 
+        y utilice su definición para calcluar \tx{cpsfilter cpseven [0..10]} 
+        paso a paso.
         
     \end{enumerate}
 \end{document}
