@@ -85,7 +85,7 @@
             -- función filter en CPS
             cpsfilter _ [] k = k []
             cpsfilter f (x:xs) k 
-                | f x k = cpsfilter f xs (\v -> k (x:v))
+                | f x (\v -> v) = cpsfilter f xs (\v -> k (x:v))
                 | otherwise = cpsfilter f xs k
         \end{minted}
 
