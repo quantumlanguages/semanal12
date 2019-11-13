@@ -72,9 +72,21 @@
             -- función filter
             filter _ [] = []
             filter f (x:xs) 
-                | f x = x :xs'
+                | f x = x:xs'
                 | otherwise xs'
               where xs' = filter f xs
+        \end{minted}
+
+        Hay que agregar un acumulador de aplicaciones de funciones así como 
+        alterar las llamadas recursivas para que siempre sean lo último que sea 
+        llamado.
+
+        \begin{minted}{haskell}
+            -- función filter en CPS
+            cpsfilter _ [] k = k []
+            cpsfilter f (x:xs) k 
+                | f x k = cpsfilter f xs (\v -> k (x:v))
+                | otherwise = cpsfilter f xs k
         \end{minted}
 
         y utilice su definición para calcluar \tx{cpsfilter cpseven [0..10]} 
