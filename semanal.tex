@@ -1,0 +1,52 @@
+% type
+\documentclass{article}
+
+% format
+\usepackage[letterpaper, margin=1.5cm]{geometry}
+
+% font
+\renewcommand{\familydefault}{\sfdefault}
+
+% code
+\usepackage{minted}
+
+% macros
+\newcommand{\tx}[1]{\texttt{#1}}
+
+% header
+\title{
+    Lenguajes de Programación 2020-1\\
+    Facultad de Ciencias UNAM\\
+    Ejercicio Semanal 12
+}
+
+\author{
+    Sandra del Mar Soto Corderi\\
+    Edgar Quiroz Castañeda
+}
+
+\begin{document}
+    
+    \maketitle
+
+    \begin{enumerate}
+        \item Evalúe el resultado de la siguiente expresión
+
+        \[
+            \tx{(letcc k in 10 * (continue k 3)) + 2}
+        \]
+
+        \item Transforme la siguiente función a CPS
+        
+        \begin{minted}{haskell}
+            -- función filter
+            filter _ [] = []
+            filter f (x:xs) 
+                | f x = x :xs'
+                | otherwise xs'
+              where xs' = filter f xs
+        \end{minted}
+
+        
+    \end{enumerate}
+\end{document}
